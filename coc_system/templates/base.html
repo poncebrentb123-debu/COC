@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>COC Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --text-dark: #1f2937;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            margin: 0;
+            padding-block: 40px; padding-inline: 20px;
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-block-size: 100vh;
+        }
+
+        .container {
+            inline-size: 100%;
+            max-inline-size: 1000px;
+            background: var(--glass-bg);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+            box-sizing: border-box;
+        }
+
+        h2, h3 {
+            text-align: center;
+            color: var(--primary);
+            margin-block-start: 0;
+        }
+
+        /* Navigation / Action Links */
+        .nav-link {
+            display: inline-block;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            margin-block-end: 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        /* Table Styling */
+        table {
+            inline-size: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-block-start: 20px;
+        }
+
+        th {
+            background-color: #f9fafb;
+            padding: 12px;
+            text-align: start;
+            border-block-end: 2px solid #e5e7eb;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 15px 12px;
+            background: white;
+            border-block-end: 1px solid #f3f4f6;
+        }
+
+        /* Form Styling */
+        label {
+            display: block;
+            margin-block-end: 5px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        input, select {
+            inline-size: 100%;
+            padding: 12px;
+            margin-block-end: 20px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        button {
+            inline-size: 100%;
+            padding: 12px;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #059669;
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            margin-inline-end: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>COC Management System</h2>
+        <hr style="border: 0; block-size: 1px; background: #e5e7eb; margin-block-end: 30px;">
+        
+        
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COC Management | Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+    :root {
+        --primary: #2563eb;
+        --primary-light: #3b82f6;
+        --accent: #0ea5e9;
+        --sidebar-bg: linear-gradient(180deg, #0f172a, #1e293b);
+        --main-bg: #eef2ff;
+        --card-bg: rgba(255, 255, 255, 0.75);
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --success: #16a34a;
+        --danger: #dc2626;
+        --glass-blur: blur(14px);
+    }
+
+    body.dark-theme {
+        --main-bg: #0b1120;
+        --card-bg: rgba(30, 41, 59, 0.75);
+        --text-main: #f1f5f9;
+        --text-muted: #94a3b8;
+        --sidebar-bg: linear-gradient(180deg, #020617, #0f172a);
+    }
+
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background: var(--main-bg);
+        margin: 0;
+        display: flex;
+        min-block-size: 100vh;
+        transition: all 0.4s ease;
+    }
+
+    /* FIX: Added -webkit-backdrop-filter for Safari compatibility */
+    .sidebar {
+        inline-size: 280px;
+        background: var(--sidebar-bg);
+        color: white;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 6px 0 25px rgba(0,0,0,0.25);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+    }
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-block-end: 3rem;
+    }
+
+    .sidebar-logo {
+        inline-size: 90px;
+        block-size: 90px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--primary-light);
+        box-shadow: 0 0 20px rgba(59,130,246,0.4);
+    }
+
+    .sidebar h1 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 0;
+        color: var(--primary-light);
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        padding: 0.9rem 1rem;
+        color: #cbd5e1;
+        text-decoration: none;
+        border-radius: 12px;
+        margin-block-end: 0.6rem;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    .nav-item:hover {
+        background: rgba(255,255,255,0.08);
+        transform: translateX(8px);
+    }
+
+    .nav-item.active {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 8px 20px rgba(37,99,235,0.4);
+    }
+
+    .sidebar-footer {
+        margin-block-start: auto;
+        padding-block-start: 1rem;
+    }
+
+    .btn-logout-side {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #fff;
+        background: linear-gradient(135deg, #111827, #1f2937);
+        border: 1px solid rgba(255,255,255,0.12);
+        box-shadow: 0 10px 22px rgba(0,0,0,0.25);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-logout-side:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 28px rgba(0,0,0,0.35);
+    }
+
+    .content {
+        flex: 1;
+        padding: 3rem;
+    }
+
+    .table-container,
+    .settings-container {
+        background: var(--card-bg);
+        -webkit-backdrop-filter: var(--glass-blur);
+        backdrop-filter: var(--glass-blur);
+        border-radius: 24px;
+        padding: 2rem;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        inline-size: 100%;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+    }
+
+    .hidden-section {
+        display: none;
+    }
+
+    .municipality-title {
+        color: var(--primary);
+        margin-block-end: 2rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+    }
+
+    table {
+        inline-size: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        text-align: start;
+        padding: 1rem;
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        border-block-end: 2px solid rgba(0,0,0,0.05);
+        letter-spacing: 1px;
+    }
+
+    td {
+        padding: 1.2rem 1rem;
+        border-block-end: 1px solid rgba(0,0,0,0.04);
+        font-size: 0.95rem;
+        color: var(--text-main);
+        transition: background 0.2s ease;
+    }
+
+    /* FIX: Replaced inline styles with CSS classes */
+    .txt-bold { font-weight: 600; }
+    .txt-right { text-align: end; }
+    .txt-main { color: var(--text-main); }
+    .txt-muted { color: var(--text-muted); }
+
+    tbody tr:hover td {
+        background: rgba(59,130,246,0.05);
+    }
+
+    .status-badge {
+        padding: 6px 14px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    .status-badge.active {
+        background: rgba(22,163,74,0.15);
+        color: var(--success);
+    }
+
+    .status-badge.on-leave {
+        background: rgba(220,38,38,0.15);
+        color: var(--danger);
+    }
+
+    .btn-action {
+        text-decoration: none;
+        padding: 0.6rem 1.2rem;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .btn-add-coc {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white;
+        box-shadow: 0 6px 18px rgba(14,165,233,0.3);
+    }
+
+    .btn-add-coc:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(14,165,233,0.5);
+    }
+
+    .setting-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.4rem;
+        border-block-end: 1px solid rgba(0,0,0,0.05);
+        transition: background 0.2s ease;
+    }
+
+    .setting-card:hover {
+        background: rgba(59,130,246,0.05);
+        border-radius: 12px;
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        inline-size: 55px;
+        block-size: 26px;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        inline-size: 0;
+        block-size: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        inset: 0;
+        background-color: #cbd5e1;
+        transition: .4s;
+        border-radius: 50px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        block-size: 18px;
+        inline-size: 18px;
+        inset-inline-start: 4px;
+        inset-block-end: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(28px);
+    }
+
+    .about-card {
+        border-inline-start: 6px solid var(--primary);
+        background: var(--card-bg);
+        -webkit-backdrop-filter: var(--glass-blur);
+        backdrop-filter: var(--glass-blur);
+        padding: 2rem;
+        margin-block-end: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+    }
+
+    .about-text {
+        color: var(--text-muted);
+        line-height: 1.8;
+        margin: 0;
+    }
+
+    .contact-info {
+        margin-block-start: 3rem;
+        text-align: center;
+        border-block-start: 1px solid rgba(0,0,0,0.08);
+        padding-block-start: 2rem;
+    }
+
+    .contact-info h4 {
+        margin-block-end: 1rem;
+        color: var(--text-main);
+        font-weight: 700;
+    }
+
+    .contact-info p {
+        margin-block: 0.4rem;
+        margin-inline: 0;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    .website-link {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .website-link:hover {
+        text-decoration: underline;
+    }
+
+    /* Accessibility screen reader text */
+    .sr-only {
+        position: absolute;
+        inline-size: 1px; block-size: 1px;
+        padding: 0; margin: -1px;
+        overflow: hidden; clip: rect(0,0,0,0);
+        border: 0;
+    }
+</style>
+
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="logo-container">
+        <img src="/coc_system/templates/company_logo.jpg.png" alt="Company Logo" class="sidebar-logo">
+        <h1>HR SYSTEM</h1>
+    </div>
+    <a href="javascript:void(0)" onclick="showPage('dashboard-section', this)" id="nav-dash" class="nav-item active">Dashboard</a>
+    <a href="javascript:void(0)" onclick="showPage('employee-section', this)" id="nav-emp" class="nav-item">Employees</a>
+    <a href="javascript:void(0)" onclick="showPage('settings-section', this)" id="nav-settings" class="nav-item">Settings</a>
+    <a href="javascript:void(0)" onclick="showPage('about-section', this)" id="nav-about" class="nav-item">About</a>
+
+    <div class="sidebar-footer">
+        <a class="btn-logout-side" href="/coc_system/logout.php">Logout</a>
+    </div>
+</div>
+
+<div class="content">
+    <div id="dashboard-section" class="table-container">
+        <h2 class="municipality-title">Admin Dashboard</h2>
+        <table>
+            <thead>
+                <tr><th>Full Name</th><th>Position</th><th>Department</th><th>Status</th><th class="txt-right">Operations</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><span class="txt-bold">Ricardo S. Mendoza</span></td><td>COO</td><td>Management</td><td><span class="status-badge active">Active</span></td><td class="txt-right"><a href="/coc_system/add_coc.php?name=Ricardo%20S.%20Mendoza&amp;position=COO&amp;department=Management" class="btn-action btn-add-coc">Add COC</a></td></tr>
+                <tr><td><span class="txt-bold">Elena G. Ramos</span></td><td>HR Director</td><td>Human Resources</td><td><span class="status-badge on-leave">On Leave</span></td><td class="txt-right"><a href="/coc_system/add_coc.php?name=Elena%20G.%20Ramos&amp;position=HR%20Director&amp;department=Human%20Resources" class="btn-action btn-add-coc">Add COC</a></td></tr>
+                <tr><td><span class="txt-bold">Marcus V. Aurelio</span></td><td>Head of Security</td><td>Public Safety</td><td><span class="status-badge active">Active</span></td><td class="txt-right"><a href="/coc_system/add_coc.php?name=Marcus%20V.%20Aurelio&amp;position=Head%20of%20Security&amp;department=Public%20Safety" class="btn-action btn-add-coc">Add COC</a></td></tr>
+                <tr><td><span class="txt-bold">Sofia P. Castro</span></td><td>CIO</td><td>IT Services</td><td><span class="status-badge on-leave">On Leave</span></td><td class="txt-right"><a href="/coc_system/add_coc.php?name=Sofia%20P.%20Castro&amp;position=CIO&amp;department=IT%20Services" class="btn-action btn-add-coc">Add COC</a></td></tr>
+                <tr><td><span class="txt-bold">Leonardo D. Lopez</span></td><td>Legal Counsel</td><td>Legal</td><td><span class="status-badge active">Active</span></td><td class="txt-right"><a href="/coc_system/add_coc.php?name=Leonardo%20D.%20Lopez&amp;position=Legal%20Counsel&amp;department=Legal" class="btn-action btn-add-coc">Add COC</a></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="employee-section" class="table-container hidden-section">
+        <h2 class="municipality-title">Employee Directory</h2>
+        <table>
+            <thead>
+                <tr><th>Full Name</th><th>Position</th><th>Department</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><span class="txt-bold">Albert C. Villanueva</span></td><td>Senior Accountant</td><td>Finance</td><td><span class="status-badge active">Active</span></td></tr>
+                <tr><td><span class="txt-bold">Beatriz M. Santos</span></td><td>IT Administrator</td><td>Tech Support</td><td><span class="status-badge on-leave">On Leave</span></td></tr>
+                <tr><td><span class="txt-bold">Carlos P. Reyes</span></td><td>Planning Officer</td><td>Planning</td><td><span class="status-badge active">Active</span></td></tr>
+                <tr><td><span class="txt-bold">Diana L. Garcia</span></td><td>Public Relations</td><td>Communications</td><td><span class="status-badge active">Active</span></td></tr>
+                <tr><td><span class="txt-bold">Fernando V. Lopez</span></td><td>Civil Engineer</td><td>Engineering</td><td><span class="status-badge on-leave">On Leave</span></td></tr>
+                <tr><td><span class="txt-bold">Grace T. Aquino</span></td><td>Office Secretary</td><td>Admin Services</td><td><span class="status-badge active">Active</span></td></tr>
+                <tr><td><span class="txt-bold">Isabel K. Mercado</span></td><td>Social Worker</td><td>Social Welfare</td><td><span class="status-badge active">Active</span></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="settings-section" class="settings-container hidden-section">
+        <h2 class="municipality-title">System Settings</h2>
+        
+        <div class="setting-card">
+            <div>
+                <strong class="txt-main">Dark Mode</strong><br>
+                <small class="txt-muted">Toggle the high-contrast dark interface.</small>
+            </div>
+            <label class="toggle-switch">
+                <span class="sr-only">Toggle Dark Mode</span>
+                <input type="checkbox" id="themeToggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="setting-card">
+            <div>
+                <strong class="txt-main">Two-Factor Authentication</strong><br>
+                <small class="txt-muted">Add an extra layer of security to admin login.</small>
+            </div>
+            <label class="toggle-switch">
+                <span class="sr-only">Enable 2FA</span>
+                <input type="checkbox" title="Enable Two-Factor Authentication">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="setting-card">
+            <div>
+                <strong class="txt-main">Confidential Mode</strong><br>
+                <small class="txt-muted">Blur sensitive employee data when not hovered.</small>
+            </div>
+            <label class="toggle-switch">
+                <span class="sr-only">Confidential Mode</span>
+                <input type="checkbox" title="Enable Confidential Mode">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="setting-card">
+            <div>
+                <strong class="txt-main">Email Summary</strong><br>
+                <small class="txt-muted">Receive weekly HR status reports via email.</small>
+            </div>
+            <label class="toggle-switch">
+                <span class="sr-only">Email Summary</span>
+                <input type="checkbox" checked title="Enable Email Summary">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="setting-card">
+            <div>
+                <strong class="txt-main">Auto-Logout</strong><br>
+                <small class="txt-muted">Logout after 15 minutes of inactivity.</small>
+            </div>
+            <label class="toggle-switch">
+                <span class="sr-only">Auto-Logout</span>
+                <input type="checkbox" checked title="Enable Auto-Logout">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <div id="about-section" class="hidden-section">
+        <h2 class="municipality-title">Municipality of Agoncillo</h2>
+        <div class="about-card">
+            <h3>Mission</h3>
+            <p class="about-text">To establish a community with initiative in pursuing peace, unity and good governance for health, education, agriculture, tourism and livelihood.<br><br>
+            "Itaguyod ang pamayanang may malasakit sa pagsusulong ng kapayapaan, pagkakaisa at mabuting pamamahala sa kalusugan, edukasyon, agrikultura, turismo at kabuhayan".</p>
+        </div>
+        <div class="about-card">
+            <h3>Vision</h3>
+            <p class="about-text">A premier Agri-Ecotourism municipality, home of God-loving, healthy and empowered citizens living in a sustainable environment, safe and resilient community with a progressive economy, driven by honest and competent leaders towards a "Magandang Agoncillo, Magandang Serbisyo Publiko."<br><br>
+            "Nangungunang munisipalidad sa Agri-Ecotourism, tahanan ng mga mamamayang Maka-Diyos, malusog, may kakayahan, naninirahan sa isang ligtas at matatag na komunidad na may maunlad na ekonomiya na pinamumunuan ng matapat at mahusay na mga pinuno tungo sa Magandang Agoncillo, Magandang Serbisyo Publiko".</p>
+        </div>
+
+        <div class="contact-info">
+            <h4>Contact Us</h4>
+            <p><strong>Address:</strong> Poblacion, Agoncillo, Batangas</p>
+            <p><strong>Mobile No.:</strong> +63 912 345 6789</p>
+            <p><strong>E-Mail Address:</strong> info@agoncillo.gov.ph</p>
+            <p><strong>Website Address:</strong> <a href="http://www.agoncillo.gov.ph" target="_blank" rel="noopener" class="website-link">www.agoncillo.gov.ph</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showPage(pageId, navElement) {
+        document.getElementById('dashboard-section').style.display = 'none';
+        document.getElementById('employee-section').style.display = 'none';
+        document.getElementById('settings-section').style.display = 'none';
+        document.getElementById('about-section').style.display = 'none';
+        
+        document.getElementById(pageId).style.display = 'block';
+        
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        navElement.classList.add('active');
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle('dark-theme');
+    }
+</script>
+
+</body>
+</html>
+
+
+
+
+

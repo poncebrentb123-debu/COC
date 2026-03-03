@@ -1,0 +1,527 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee COC Certificate</title>
+    <style>
+        body { font-family: 'Times New Roman', serif; margin: 0; padding: 28px; background: #e0e0e0; }
+
+        .flip-toolbar {
+            max-inline-size: 1000px;
+            margin: 0 auto 12px;
+            text-align: end;
+        }
+
+        .flip-btn {
+            border: 1px solid #1f2937;
+            background: #111827;
+            color: #fff;
+            border-radius: 6px;
+            padding: 7px 12px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .print-btn {
+            border: 1px solid #0f766e;
+            background: #0f766e;
+            color: #fff;
+            border-radius: 6px;
+            padding: 7px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-inline-start: 8px;
+        }
+
+        .flip-stage {
+            max-inline-size: 1000px;
+            margin: auto;
+            perspective: 2000px;
+        }
+
+        .flip-card {
+            position: relative;
+            min-block-size: 1200px;
+            transform-style: preserve-3d;
+            transition: transform 0.8s ease;
+        }
+
+        .flip-card.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .cert-face {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+        }
+
+        .cert-face.back {
+            transform: rotateY(180deg);
+        }
+
+        .cert-container {
+            padding: 34px 36px 28px;
+            block-size: 100%;
+            text-align: center;
+            background: #fff;
+            box-shadow: 0 0 20px rgba(0,0,0,0.18);
+            box-sizing: border-box;
+        }
+
+        .gov-header { line-height: 1.12; font-weight: 700; font-size: 20px; }
+        .gov-header div { margin: 0; }
+        .seal { inline-size: 86px; block-size: 86px; object-fit: contain; margin: 10px auto 8px; display: block; }
+        .office-title { font-size: 34px; font-weight: 800; margin: 6px 0 12px; letter-spacing: 0.4px; }
+
+        .title-box {
+            display: inline-block;
+            border: 2px solid #333;
+            border-radius: 16px;
+            padding: 10px 32px 8px;
+            line-height: 1.08;
+            margin-block-end: 26px;
+        }
+
+        .title-box .line1 { font-size: 24px; }
+        .title-box .line2 { font-size: 32px; font-weight: 700; }
+        .title-box .line2 span { text-decoration: underline; }
+
+        .entitlement {
+            font-size: 19px;
+            line-height: 1.22;
+            margin: 10px 0 6px;
+        }
+
+        .employee-name { text-decoration: underline; font-weight: 700; text-transform: uppercase; }
+        .employee-hours { font-weight: 700; }
+        .name-note { font-size: 18px; font-weight: 700; margin: 0 0 16px; }
+
+        .coc-table {
+            inline-size: 92%;
+            border-collapse: collapse;
+            margin: 14px auto 0;
+            background: #fff;
+            border: 1px solid #333;
+        }
+
+        .coc-table th,
+        .coc-table td {
+            border: 1px solid #333;
+            padding: 4px 10px;
+            font-size: 14px;
+            line-height: 1.1;
+        }
+
+        .coc-table th { font-weight: 700; text-align: center; background: #fff; }
+        .coc-table td:first-child { text-align: left; }
+        .coc-table td:nth-child(2), .coc-table td:nth-child(3) { text-align: center; }
+
+        .note-line {
+            text-align: left;
+            inline-size: 92%;
+            margin: 28px auto 0;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .prepared {
+            text-align: left;
+            inline-size: 92%;
+            margin: 22px auto 0;
+            font-size: 16px;
+            line-height: 1.24;
+        }
+
+        .prepared .label { font-weight: 700; }
+        .prepared .name { font-weight: 700; }
+        .prepared .indent { margin-inline-start: 145px; }
+        .prepared .date-underline { text-decoration: underline; }
+
+        .back-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 4px 0 18px;
+        }
+
+        .back-table {
+            inline-size: 96%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            border: 1px solid #333;
+            font-size: 14px;
+        }
+
+        .back-table th,
+        .back-table td {
+            border: 1px solid #333;
+            padding: 5px 6px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .back-table th {
+            font-weight: 700;
+        }
+
+        .back-table td:first-child {
+            text-align: left;
+            padding-inline-start: 8px;
+        }
+
+        .back-foot {
+            inline-size: 96%;
+            margin: 26px auto 0;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            font-size: 16px;
+        }
+
+        .back-foot .left,
+        .back-foot .right {
+            text-align: left;
+            line-height: 1.5;
+        }
+
+        .back-sign {
+            font-size: 26px;
+            font-style: italic;
+            margin-block-end: -4px;
+        }
+
+        .text-underline {
+            text-decoration: underline;
+            font-weight: 700;
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 10mm;
+            }
+
+            body {
+                background: #fff;
+                padding: 0;
+                margin: 0;
+            }
+
+            .flip-toolbar {
+                display: none;
+            }
+
+            .flip-stage {
+                max-inline-size: none;
+                margin: 0;
+                perspective: none;
+            }
+
+            .flip-card {
+                transform: none !important;
+                min-block-size: auto;
+                position: static;
+            }
+
+            .cert-face {
+                position: static;
+                inset: auto;
+                transform: none !important;
+                backface-visibility: visible;
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
+            .cert-face.front {
+                break-after: page;
+                page-break-after: always;
+            }
+
+            .cert-face.back {
+                break-after: auto;
+                page-break-after: auto;
+            }
+
+            .cert-container {
+                box-shadow: none;
+                block-size: auto;
+                max-inline-size: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="flip-toolbar">
+    <button id="flipButton" class="flip-btn" type="button">Show Back</button>
+    <button id="printButton" class="print-btn" type="button">Print</button>
+</div>
+
+<div class="flip-stage">
+    <div id="flipCard" class="flip-card">
+        <div class="cert-face front">
+            <div class="cert-container">
+                <div class="gov-header">
+                    <div>Republic of the Philippines</div>
+                    <div>Province of Batangas</div>
+                    <div>Municipality of Agoncillo</div>
+                </div>
+                <img src="templates/company_logo.jpg.png" alt="Municipality Seal" class="seal">
+                <div class="office-title">OFFICE OF THE HUMAN RESOURCE</div>
+
+                <div class="title-box">
+                    <div class="line1">Certificate of COC Earned</div>
+                    <div class="line2">As of <span>NOVEMBER 2025</span></div>
+                </div>
+
+                <p class="entitlement">
+                    This certificate entitles Mr./Ms. <span id="employeeName" class="employee-name">RICARDO S. MENDOZA</span>
+                    <span id="employeeHoursStart" class="employee-hours">156</span> to
+                    <span id="employeeHoursEnd" class="employee-hours">156.5</span>hrs of Compensatory Overtime Credits
+                </p>
+                <p class="name-note">(Name of Employee (# of hours))</p>
+
+                <table class="coc-table">
+                    <colgroup>
+                        <col style="width: 44%;">
+                        <col style="width: 28%;">
+                        <col style="width: 28%;">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Date and Kind of Activity</th>
+                            <th>COC Earned (hours accrued)</th>
+                            <th>Valid Until</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>June OT</td>
+                            <td>10.5</td>
+                            <td>June 2026</td>
+                        </tr>
+                        <tr>
+                            <td>July OT</td>
+                            <td>76.5</td>
+                            <td>July 2026</td>
+                        </tr>
+                        <tr>
+                            <td>August OT</td>
+                            <td>25.5</td>
+                            <td>August 2026</td>
+                        </tr>
+                        <tr>
+                            <td>September OT</td>
+                            <td>14</td>
+                            <td>September 2026</td>
+                        </tr>
+                        <tr>
+                            <td>November OT</td>
+                            <td>30</td>
+                            <td>November 2026</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p class="note-line">Note: Each employee may accrue not more than forty (40) hours of COC's per month.</p>
+
+                <div class="prepared">
+                    <div><span class="label">Prepared by:</span> <span class="name">Angela Marie M. De Castro, CHRA</span></div>
+                    <div class="indent">ADMINISTRATIVE AIDE IV/BOOKBINDER II</div>
+                    <div><span class="label">Date Issued:</span> <span class="date-underline">December 17, 2025</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cert-face back">
+            <div class="cert-container">
+                <div class="back-title">COC Monitoring Sheet (Back)</div>
+                <table class="back-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" style="width: 14%;">No. of Hours of Earned COCs<br>(Beginning Balance + COCs Earned)</th>
+                            <th rowspan="2" style="width: 14%;">Date of CTO</th>
+                            <th rowspan="2" style="width: 13%;">Used COCs<br>(Blocks of 4hrs or 8hrs only)</th>
+                            <th rowspan="2" style="width: 14%;">Remaining COCs<br>(Beginning Balance - Used COCs)</th>
+                            <th colspan="3" style="width: 45%;">Approved by Authorized Signatories</th>
+                        </tr>
+                        <tr>
+                            <th>Head of Office</th>
+                            <th>LCE</th>
+                            <th>HR</th>
+                        </tr>
+                    </thead>
+                    <tbody id="backTableBody"></tbody>
+                </table>
+
+                <div class="back-foot">
+                    <div class="left">
+                        <div class="back-sign">[signature]</div>
+                        <div id="backPrintedName" class="text-underline">RICARDO S. MENDOZA</div>
+                        <div>Signature over Printed Name</div>
+                        <div>Biometric ID No. 126</div>
+                    </div>
+                    <div class="right">
+                        <div>Position: <span id="backPosition">COO</span></div>
+                        <div>Department: <span id="backDepartment">Management</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const params = new URLSearchParams(window.location.search);
+        const name = params.get('name');
+        const position = params.get('position');
+        const department = params.get('department');
+        const hoursStart = params.get('hours_start');
+        const hoursEnd = params.get('hours_end');
+        const flipCard = document.getElementById('flipCard');
+        const flipButton = document.getElementById('flipButton');
+        const printButton = document.getElementById('printButton');
+        const backTableBody = document.getElementById('backTableBody');
+
+        function fmtHours(value) {
+            const num = Number(value) || 0;
+            return String(Number(num.toFixed(2)));
+        }
+
+        function parseJsonParam(paramName, fallbackValue) {
+            const raw = params.get(paramName);
+            if (!raw) {
+                return fallbackValue;
+            }
+            try {
+                const parsed = JSON.parse(raw);
+                return Array.isArray(parsed) ? parsed : fallbackValue;
+            } catch (error) {
+                return fallbackValue;
+            }
+        }
+
+        const fallbackEarnedRows = [
+            { activity_date: '2025-06-30', hours_earned: 10.5 },
+            { activity_date: '2025-07-31', hours_earned: 76.5 },
+            { activity_date: '2025-08-31', hours_earned: 25.5 },
+            { activity_date: '2025-09-30', hours_earned: 14 },
+            { activity_date: '2025-11-30', hours_earned: 30 }
+        ];
+
+        const fallbackUsedRows = [
+            { cto_date: '2026-01-09', cto_hours: 4 },
+            { cto_date: '2026-02-03', cto_hours: 8 }
+        ];
+
+        const earnedRows = parseJsonParam('earned_rows', fallbackEarnedRows)
+            .filter(function (row) {
+                return row && row.activity_date && Number(row.hours_earned) > 0;
+            })
+            .sort(function (a, b) {
+                return String(a.activity_date).localeCompare(String(b.activity_date));
+            });
+
+        const usedRows = parseJsonParam('used_rows', fallbackUsedRows)
+            .filter(function (row) {
+                return row && row.cto_date && Number(row.cto_hours) > 0;
+            })
+            .sort(function (a, b) {
+                return String(a.cto_date).localeCompare(String(b.cto_date));
+            });
+
+        const totalEarned = earnedRows.reduce(function (sum, row) {
+            return sum + Number(row.hours_earned || 0);
+        }, 0);
+
+        const totalUsed = usedRows.reduce(function (sum, row) {
+            return sum + Number(row.cto_hours || 0);
+        }, 0);
+
+        const remainingBalance = Math.max(0, totalEarned - totalUsed);
+        const computedStart = hoursStart || fmtHours(totalEarned);
+        const computedEnd = hoursEnd || fmtHours(remainingBalance);
+
+        let runningBalance = totalEarned;
+        const usageBalanceRows = [];
+
+        usedRows.forEach(function (row) {
+            const ctoDate = String(row.cto_date);
+            const used = Number(row.cto_hours || 0);
+            const before = runningBalance;
+
+            let after = before - used;
+            if (after < 0) {
+                after = 0;
+            }
+
+            usageBalanceRows.push({
+                cto_date: ctoDate,
+                used: used,
+                before: before,
+                after: after
+            });
+
+            runningBalance = after;
+        });
+
+        if (usageBalanceRows.length === 0) {
+            usageBalanceRows.push({
+                cto_date: '-',
+                used: 0,
+                before: totalEarned,
+                after: totalEarned
+            });
+        }
+
+        usageBalanceRows.forEach(function (row) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = [
+                '<td>' + fmtHours(row.before) + ' hrs</td>',
+                '<td>' + row.cto_date + '</td>',
+                '<td>' + fmtHours(row.used) + '</td>',
+                '<td>' + fmtHours(row.after) + ' hrs</td>',
+                '<td></td>',
+                '<td></td>',
+                '<td></td>'
+            ].join('');
+            backTableBody.appendChild(tr);
+        });
+
+        for (let i = usageBalanceRows.length; i < 10; i += 1) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = '<td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td>';
+            backTableBody.appendChild(tr);
+        }
+
+        flipButton.addEventListener('click', function () {
+            flipCard.classList.toggle('is-flipped');
+            flipButton.textContent = flipCard.classList.contains('is-flipped') ? 'Show Front' : 'Show Back';
+        });
+
+        printButton.addEventListener('click', function () {
+            window.print();
+        });
+
+        if (name) {
+            document.getElementById('employeeName').textContent = name.toUpperCase();
+            document.getElementById('backPrintedName').textContent = name.toUpperCase();
+        }
+
+        document.getElementById('employeeHoursStart').textContent = computedStart;
+        document.getElementById('employeeHoursEnd').textContent = computedEnd;
+
+        if (position) {
+            document.getElementById('backPosition').textContent = position;
+        }
+
+        if (department) {
+            document.getElementById('backDepartment').textContent = department;
+        }
+    })();
+</script>
+
+</body>
+</html>
